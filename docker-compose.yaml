@@ -1,0 +1,8 @@
+services:
+  werewolf:
+    build: .
+    image: werewolf:latest
+    ports:
+      - "5050:5000"
+    container_name: werewolf
+    restart: always
