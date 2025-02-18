@@ -64,7 +64,7 @@
             <label>Your name:</label>
             <input type="text" name="player_name" required>
             <label>Enter game code:</label>
-            <input type="text" name="code" required>
+            <input type="text" name="code" oninput="this.value=this.value.toUpperCase()" required>
             <button type="submit">Join</button>
         </form>
     </div>
