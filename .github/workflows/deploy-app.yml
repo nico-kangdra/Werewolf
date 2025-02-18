@@ -1,0 +1,27 @@
+name: Deploy App
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: SSH into Server
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.VM_HOST }}
+        username: ${{ secrets.VM_USER }}
+        key: ${{ secrets.VM_SSH_KEY }}
+        script: |
+          [ -d "Werewolf" ] && rm -rf "Werewolf"
+          git clone https://github.com/nico-kangdra/Werewolf.git
+          cd Werewolf
+          export TAG="v${{ github.run_number }}"
+          docker compose down
+          docker compose up -d
+          echo "Done..."

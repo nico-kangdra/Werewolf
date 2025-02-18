@@ -1,5 +1,6 @@
 
 from flask import Flask, render_template, request, redirect, url_for, session
+from datetime import timedelta
 import random
 import secrets
 import string
@@ -10,6 +11,7 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
+app.permanent_session_lifetime = timedelta(days=1)
 
 # Store game sessions
 games = {}
@@ -28,6 +30,7 @@ def index():
 def join():
     code = request.form.get('code')
     if code in games:
+        session.permanent = True
         player_id = secrets.token_hex(8)
         player_name = request.form.get('player_name')
         session['player_id'] = player_id
@@ -46,6 +49,7 @@ def admin():
 def admin_login():
     if request.method == 'POST':
         if request.form.get('password') == os.environ['ADMIN_PASSWORD']:
+            session.permanent = True
             session['is_admin'] = True
             return redirect(url_for('admin'))
         return render_template('admin_login.html', error="Invalid password")
@@ -89,6 +93,12 @@ def create_game():
     }
     return redirect(url_for('admin'))
 
+@app.route('/remove_game/<code>')
+def remove_game(code):
+    if code in games:
+        del games[code]
+    return redirect(url_for('admin'))
+
 @app.route('/assign_roles/<code>')
 def assign_roles(code):
     if code in games:
@@ -107,4 +117,4 @@ def assign_roles(code):
     return redirect(url_for('admin'))
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=os.environ['FLASK_PORT'])
+    app.run(host='0.0.0.0', port=5000, debug=True)
