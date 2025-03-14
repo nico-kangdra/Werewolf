@@ -117,4 +117,4 @@ def assign_roles(code):
     return redirect(url_for('admin'))
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=os.environ['FLASK_PORT'])
+    app.run(host='0.0.0.0', debug=True)

@@ -48,8 +48,17 @@
             <h2>Name: {{ role['name'] }}</h2>
             <h2>Role: {{ role['role'] }}</h2>
         {% else %}
-            <p>Waiting for admin to assign roles...</p>
+            <p id="waitingMessage">Waiting for admin to assign roles...</p>
         {% endif %}
     </div>
 </body>
+<script>
+    setInterval(() => {
+        let waitingMessage = document.getElementById("waitingMessage");
+        if (waitingMessage) {
+            location.reload();
+        }
+    }, 5000);
+</script>
+    
 </html>

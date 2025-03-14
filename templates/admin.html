@@ -146,7 +146,7 @@
 
     <h2>Active Games</h2>
     {% for code, game in games.items() %}
-    <div class="game-card">
+    <div class="game-card" data-revealed="{{ game.roles_revealed }}">
         <h3>Game Code: {{ code }}</h3>
         <p>Roles: {{ game.roles|join(', ') }}</p>
         <p>Players ({{ game.players|length }}/{{ game.roles|length }}):</p>
@@ -158,6 +158,8 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
             {% if not game.roles_revealed and game.players|length == game.roles|length %}
             <a href="/assign_roles/{{ code }}" class="action-button assign">Assign Roles</a>
+            {% elif game.roles_revealed %}
+            <h2>Game Started</h2>
             {% else %}
             <div></div>
             {% endif %}
@@ -188,4 +190,32 @@
         }
     </style>
 </body>
+<script>
+    let inactivityTime = 0;
+
+    // Reset inactivity timer on user interaction
+    document.onmousemove = document.onkeypress = () => inactivityTime = 0;
+
+    setInterval(() => {
+        let gameCards = document.querySelectorAll(".game-card");
+        let shouldReload = false;
+
+        // Check if any game card has roles not yet revealed
+        gameCards.forEach(card => {
+            if (card.getAttribute("data-revealed") === "False") {
+                shouldReload = true;
+            }
+        });
+
+        // Increase inactivity time
+        inactivityTime += 5;
+
+        // Reload if conditions are met
+        if (shouldReload && inactivityTime >= 5) {
+            location.reload();
+        }
+    }, 5000);
+</script>
+
+    
 </html>
