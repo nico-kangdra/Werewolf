@@ -12,6 +12,7 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
 app.permanent_session_lifetime = timedelta(days=1)
+app.url_map.strict_slashes = False
 
 # Store game sessions
 games = {}
