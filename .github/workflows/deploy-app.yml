@@ -30,7 +30,7 @@ jobs:
           push: true
           tags: |
             nkangdra/werewolf:latest
-            nkangdra/werewolf:${{ github.run_number }}
+            nkangdra/werewolf:v${{ github.run_number }}
 
       - name: Print Image Tag
-        run: echo "Image built and pushed: myrepo/myapp:${{ github.run_number }}"
+        run: echo "Image built and pushed with tag v${{ github.run_number }}"
